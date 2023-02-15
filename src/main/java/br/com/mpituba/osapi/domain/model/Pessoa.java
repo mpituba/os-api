@@ -1,7 +1,6 @@
+package br.com.mpituba.osapi.domain.model;
 import java.time.OffsetDateTime;
 
-import br.com.mpituba.osapi.domain.model.Endereco;
-import br.com.mpituba.osapi.domain.model.TipoPessoa;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
