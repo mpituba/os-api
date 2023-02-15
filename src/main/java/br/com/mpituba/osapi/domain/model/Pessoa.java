@@ -1,28 +1,43 @@
 package br.com.mpituba.osapi.domain.model;
 import java.time.OffsetDateTime;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 abstract class Pessoa {
 	
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include
 	protected Long id;
 	
+	@Column(name = "tipo_pessoa")
 	protected TipoPessoa tipoPessoa;
 	
+	@Column(name = "tratamento")
 	protected String tratamento;
 	
+	@Column(name = "nome")
 	protected String nome;
 	
-	protected Endereco endereco;
 	
+	//protected Endereco endereco;
+	
+	@Column(name = "ativo")
 	protected Boolean ativo;
 	
 	protected OffsetDateTime dataCriacao;
