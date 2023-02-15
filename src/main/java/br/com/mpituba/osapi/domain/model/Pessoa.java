@@ -4,27 +4,29 @@ import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Pessoa {
+abstract class Pessoa {
 	
 	@EqualsAndHashCode.Include
-	private Long id;
+	protected Long id;
 	
-	private TipoPessoa tipoPessoa;
+	protected TipoPessoa tipoPessoa;
 	
-	private String tratamento;
+	protected String tratamento;
 	
-	private String nome;
+	protected String nome;
 	
-	private Endereco endereco;
+	protected Endereco endereco;
 	
-	private Boolean ativo;
+	protected Boolean ativo;
 	
-	private OffsetDateTime dataCriacao;
+	protected OffsetDateTime dataCriacao;
 	
-	private OffsetDateTime dataUltimaDesativacao;
+	protected OffsetDateTime dataUltimaDesativacao;
 	
 }
