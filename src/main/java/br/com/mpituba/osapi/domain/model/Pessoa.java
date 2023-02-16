@@ -3,6 +3,7 @@ package br.com.mpituba.osapi.domain.model;
 import java.time.OffsetDateTime;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,7 +26,8 @@ public class Pessoa {
 	@EqualsAndHashCode.Include
 	private Long id;
 	
-	//private TipoPessoa tipoPessoa;
+	@Column(name = "tipo_pessoa")
+	private TipoPessoa tipoPessoa;
 	
 	@Column(name = "tratamento")
 	private String tratamento;
@@ -33,7 +35,8 @@ public class Pessoa {
 	@Column(name = "nome")
 	private String nome;
 	
-	//private Endereco endereco;
+	@Embedded
+	private Endereco endereco;
 	
 	@Column(name = "ativo")
 	private Boolean ativo;

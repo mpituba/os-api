@@ -7,12 +7,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
 
 @Entity
 @AllArgsConstructor
@@ -26,23 +27,9 @@ public class Executor {
 	@EqualsAndHashCode.Include
 	private Long id;
 	
-	@Column(name = "tipo_pessoa")
-	private String tipoPessoa;
-	
-	@Column(name = "tratamento")
-	private String tratamento;
-	
-	@Column(name = "nome")
-	private String nome;
-	
 	@Column(name = "titulo")
 	private String titulo;
-	
-	//private Endereco endereco;
-	
-	@Column(name = "ativo")
-	private Boolean ativo;
-	
+		
 	@Column(name = "email")
 	private String email;
 	
@@ -54,5 +41,10 @@ public class Executor {
 	
 	@Column(name = "data_cadastro",nullable = false)
 	private OffsetDateTime dataCadastro;
+
+	@ManyToOne
+	@JoinColumn(name = "executor_pessoa_id")
+	private Pessoa pessoa;
+
 	
 }

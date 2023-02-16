@@ -1,42 +1,33 @@
 package br.com.mpituba.osapi.domain.model;
 import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-@Entity
+@Embeddable
 @Data
-@AllArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Endereco {
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@EqualsAndHashCode.Include
-	private Long id;
-	
-	@Column(name = "cep")
+	@Column(name = "endereco_cep")
 	private String cep;
 	
-	@Column(name = "logradouro")
+	@Column(name = "endereco_logradouro")
 	private String logradouro;
 	
-	@Column(name = "numero")
+	@Column(name = "endereco_numero")
 	private String numero;
 	
-	@Column(name = "complemento")
+	@Column(name = "endereco_complemento")
 	private String complemento;
 	
-	@Column(name = "bairro")
+	@Column(name = "endereco_bairro")
 	private String bairro;
 	
-	//@Embedded
-	//private Cidade cidade;
+	@ManyToOne
+	@JoinColumn(name = "endereco_cidade_id")
+	private Cidade cidade;
 	
 		
 }
