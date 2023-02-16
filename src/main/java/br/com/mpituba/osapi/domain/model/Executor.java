@@ -19,27 +19,40 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper=false)
-public final class Executor extends Pessoa{
-	
+public class Executor {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include
 	private Long id;
 	
-	@Column
+	@Column(name = "tipo_pessoa")
+	private String tipoPessoa;
+	
+	@Column(name = "tratamento")
+	private String tratamento;
+	
+	@Column(name = "nome")
+	private String nome;
+	
+	@Column(name = "titulo")
 	private String titulo;
+	
+	//private Endereco endereco;
+	
+	@Column(name = "ativo")
+	private Boolean ativo;
 	
 	@Column(name = "email")
 	private String email;
 	
-	@Column
+	@Column(name = "documento")
 	private String documento;
 	
-	@Column(nullable = false)
+	@Column(name = "tipo_documento",nullable = false)
 	private String tipoDocumento;
 	
-	@Column(nullable = false)
+	@Column(name = "data_cadastro",nullable = false)
 	private OffsetDateTime dataCadastro;
 	
 }

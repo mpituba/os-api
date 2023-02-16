@@ -1,4 +1,5 @@
 package br.com.mpituba.osapi.domain.model;
+
 import java.time.OffsetDateTime;
 
 import javax.persistence.Column;
@@ -13,35 +14,38 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Data
 @AllArgsConstructor
+@Data
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-abstract class Pessoa {
-	
+public class Pessoa {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include
-	protected Long id;
+	private Long id;
 	
-	@Column(name = "tipo_pessoa")
-	protected TipoPessoa tipoPessoa;
+	//private TipoPessoa tipoPessoa;
 	
 	@Column(name = "tratamento")
-	protected String tratamento;
+	private String tratamento;
 	
 	@Column(name = "nome")
-	protected String nome;
+	private String nome;
 	
-	
-	//protected Endereco endereco;
+	//private Endereco endereco;
 	
 	@Column(name = "ativo")
-	protected Boolean ativo;
+	private Boolean ativo;
 	
-	protected OffsetDateTime dataCriacao;
+	@Column(name = "data_criacao")
+	private OffsetDateTime dataCriacao;
 	
-	protected OffsetDateTime dataUltimaDesativacao;
+	@Column(name = "data_ultima_desativacao")
+	private OffsetDateTime dataUltimaDesativacao;
+	
 	
 }
+
+
+
