@@ -7,6 +7,10 @@ import lombok.Setter;
 @Setter
 public class EstadoApiModelInput {
 	
+	private Long id;
+	
 	private String nome;
+	
+	private String uf;
 	
 }

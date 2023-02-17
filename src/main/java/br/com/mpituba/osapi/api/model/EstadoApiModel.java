@@ -11,4 +11,6 @@ public class EstadoApiModel {
 	
 	private String nome;
 	
+	private String uf;
+	
 }
