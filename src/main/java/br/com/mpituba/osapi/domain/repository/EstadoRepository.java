@@ -1,5 +1,10 @@
 package br.com.mpituba.osapi.domain.repository;
 
-public class EstadoRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
 
+import br.com.mpituba.osapi.domain.model.Estado;
+
+public interface EstadoRepository extends JpaRepository<Estado, Long>{
+
+	
 }
