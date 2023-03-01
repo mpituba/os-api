@@ -1,6 +1,6 @@
 package br.com.mpituba.osapi.domain.exception;
 
-public class OSEstadoNotFoundException extends OsEntityNotFoundException {
+public class OSEstadoNotFoundException extends OSEntityNotFoundException {
 
 	private static final long serialVersionUID = 1L;
 	

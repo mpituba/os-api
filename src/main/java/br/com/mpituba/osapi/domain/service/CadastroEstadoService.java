@@ -6,6 +6,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import br.com.mpituba.osapi.domain.exception.OSEstadoNotFoundException;
+import br.com.mpituba.osapi.domain.exception.OSBusinessException;
 import br.com.mpituba.osapi.domain.model.Estado;
 import br.com.mpituba.osapi.domain.repository.EstadoRepository;
 
@@ -13,15 +14,27 @@ import br.com.mpituba.osapi.domain.repository.EstadoRepository;
 public class CadastroEstadoService {
 	
 	private static final String MESSAGE_ESTADO_IN_USE
-			= "Estado code %d cannot be removed. It's in use.";
+			= "Estado with code %d cannot be removed. It's in use.";
 	
 	@Autowired
 	private EstadoRepository estadoRepository;
 	
 	public Estado salvar(Estado estado) {
 		
-		return estadoRepository.save(estado);
+		try {
 		
+			return estadoRepository.save(estado);
+			
+		}catch (DataIntegrityViolationException e) {
+			
+			throw new OSBusinessException(
+				
+				String.format("The database rules were violated. Fill in all fields "
+					+ "correctly and try again.")	
+			
+			);
+			
+		}
 	}
 	
 	public void excluir(Long estadoId) {
@@ -29,6 +42,7 @@ public class CadastroEstadoService {
 		try {
 			
 			estadoRepository.deleteById(estadoId);
+			estadoRepository.flush();
 			
 		}catch (EmptyResultDataAccessException e) {
 			

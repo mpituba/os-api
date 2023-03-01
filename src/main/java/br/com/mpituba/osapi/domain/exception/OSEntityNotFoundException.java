@@ -1,10 +1,10 @@
 package br.com.mpituba.osapi.domain.exception;
 
-public abstract class OsEntityNotFoundException extends OsBusinessException {
+public abstract class OSEntityNotFoundException extends OSBusinessException {
 
 	private static final long serialVersionUID = 1L;
 	
-	public OsEntityNotFoundException (String message) {
+	public OSEntityNotFoundException (String message) {
 		
 		super (message); 
 		
