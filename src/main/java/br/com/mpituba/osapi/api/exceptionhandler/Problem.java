@@ -14,13 +14,23 @@ import lombok.Getter;
 @Builder
 public class Problem {
 
-		private Integer status;
-		private OffsetDateTime timeStamp;
-		private String type;
-		private String title;
-		private String detail;
+	private Integer status;
+	private OffsetDateTime timestamp;
+	private String type;
+	private String title;
+	private String detail;
+	private String userMessage;
+	private List<Object> objects;
+	
+	@Getter
+	@Builder
+	public static class Object {
+		
+		private String name;
 		private String userMessage;
-		private List<Object> objects;
 		
-		
+	}
+	
 }
+
+

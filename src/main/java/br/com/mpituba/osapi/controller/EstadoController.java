@@ -2,6 +2,8 @@ package br.com.mpituba.osapi.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -61,19 +63,19 @@ public class EstadoController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public EstadoApiModel adicionar(@RequestBody  	
+	public EstadoApiModel adicionar(@RequestBody  	@Valid
 			EstadoApiModelInput estadoApiModelInput) {
-		
-		Estado estado = estadoDisassembler.toModel(estadoApiModelInput);
-		
-		estado = cadastroEstado.salvar(estado);
-		
-		return estadoToApiModelAssembler.toApiModel(estado);
-	} 
+								
+			Estado estado = estadoDisassembler.toModel(estadoApiModelInput);
+				
+			estado = cadastroEstado.salvar(estado);
+			
+			return estadoToApiModelAssembler.toApiModel(estado);
+		} 
 	
 	@PutMapping("/{estadoId}")
 	public EstadoApiModel atualizar (@PathVariable Long estadoId,
-				@RequestBody EstadoApiModelInput estadoInput) {
+				@RequestBody @Valid EstadoApiModelInput estadoInput) {
 		
 		Estado estado = estadoDisassembler.toModel(estadoInput);
 		

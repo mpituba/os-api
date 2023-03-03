@@ -6,10 +6,16 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -35,6 +41,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	public static final String END_USER_GENERIC_ERROR
 	= "A system error has been ocurred. Try again and if "
 			+ "the error persists, please contact the systems administrator.";
+	
+	@Autowired
+	private MessageSource messageSource;
 	
 	/**
 	 * If exception cannot be caught, then handle 500 Response Status
@@ -112,6 +121,46 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 				.build();
 		
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+	}
+	
+	/**
+	 * Incorrect fields sent.
+	 */
+	@Override
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+	    return handleValidationInternal(ex, headers, status, request, ex.getBindingResult());
+	}
+
+	private ResponseEntity<Object> handleValidationInternal(Exception ex, HttpHeaders headers,
+			HttpStatus status, WebRequest request, BindingResult bindingResult) {
+		ProblemType problemType = ProblemType.PROPERTY_NOT_FOUND;
+	    String detail = "One or more fields are invalid or were not found. Please, fill in them correctly and try again.";
+	    
+	    List<Problem.Object> problemObjects = bindingResult.getAllErrors().stream()
+	    		.map(objectError -> {
+	    			String message = messageSource.getMessage(objectError, LocaleContextHolder.getLocale());
+	    			
+	    			String name = objectError.getObjectName();
+	    			
+	    			if (objectError instanceof FieldError) {
+	    				name = ((FieldError) objectError).getField();
+	    			}
+	    			
+	    			return Problem.Object.builder()
+	    				.name(name)
+	    				.userMessage(message)
+	    				.build();
+	    		})
+	    		.collect(Collectors.toList());
+	    
+	    Problem problem = createProblemBuilder(status, problemType, detail)
+	        .userMessage(detail)
+	        .objects(problemObjects)
+	        .build();
+	    
+	    return handleExceptionInternal(ex, problem, headers, status, request);
 	}
 	
 	/**
@@ -256,7 +305,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		if (body == null) {
 			body = Problem.builder()
-				.timeStamp(OffsetDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.title(status.getReasonPhrase())
 				.status(status.value())
 				.userMessage(END_USER_GENERIC_ERROR)
@@ -264,7 +313,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		} else if (body instanceof String) {
 			body = Problem.builder()
-				.timeStamp(OffsetDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.title((String) body)
 				.status(status.value())
 				.userMessage(END_USER_GENERIC_ERROR)
@@ -279,7 +328,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 			ProblemType problemType, String detail) {
 		
 		return Problem.builder()
-			.timeStamp(OffsetDateTime.now())
+			.timestamp(OffsetDateTime.now())
 			.status(status.value())
 			.type(problemType.getUri())
 			.title(problemType.getTitle())

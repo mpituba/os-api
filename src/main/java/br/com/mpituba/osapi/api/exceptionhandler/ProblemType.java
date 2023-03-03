@@ -11,7 +11,8 @@ public enum ProblemType {
 	INVALID_MESSAGE("/invalid-message", "Invalid message"),
 	RESOURCE_NOT_FOUND("/resource-not-found", "Resource not found"),
 	ENTITY_IN_USE("/entity-in-use", "Entity in use"),
-	BUSINESS_RULE_VIOLATION("/business-rule-violation", "Business rule violation");
+	BUSINESS_RULE_VIOLATION("/business-rule-violation", "Business rule violation"),
+	PROPERTY_NOT_FOUND("/property-not-found", "Property not found");
 	
 	private String title;
 	private String uri;
