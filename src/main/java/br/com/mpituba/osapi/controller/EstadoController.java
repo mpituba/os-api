@@ -61,7 +61,7 @@ public class EstadoController {
 		
 	}
 	
-	@PostMapping
+	@PostMapping("/estados")
 	@ResponseStatus(HttpStatus.CREATED)
 	public EstadoApiModel adicionar(@RequestBody  	@Valid
 			EstadoApiModelInput estadoApiModelInput) {
