@@ -6,11 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 
 import br.com.mpituba.osapi.domain.model.Estado;
 import br.com.mpituba.osapi.domain.repository.EstadoRepository;
 import br.com.mpituba.osapi.util.DatabaseCleaner;
+import br.com.mpituba.osapi.util.GetJsonOnFile;
 import io.restassured.RestAssured;
 
 import static io.restassured.RestAssured.given;
@@ -23,6 +25,12 @@ public class EstadoControllerIT {
 
 	@LocalServerPort
 	private int port;
+	
+	private int numberOfRecordsOnInitialization;
+	
+	private String jsonPostRequestBodyBahia;
+	
+	private String jsonNoNomeEstadoProperty;
 	
 	@Autowired
 	private DatabaseCleaner databaseCleaner;
@@ -46,16 +54,77 @@ public class EstadoControllerIT {
 	
 	
 	@Test
-	public void afterInitializeMustContainTwoRecords() {
+	public void givenInitializedDataWhenGetThenCountRecordsOnDatabase() {
 		
 		given()
 			.accept(ContentType.JSON)
 		.when()
 			.get()
 		.then()
-			.body("", hasSize(2));
+			.body("", hasSize(numberOfRecordsOnInitialization));
 			
 	}
+	
+	
+	
+	@Test
+	public void givenAnValidIdWhenGetOnEstadosThenGet200StatusResponse() {
+		
+		given()
+			.contentType(ContentType.JSON)
+			.accept(ContentType.JSON)
+		.when()
+			.get("/1")
+		.then()
+			.statusCode(HttpStatus.OK.value());
+		
+	}
+	
+	
+	@Test
+	public void givenValidPostRequestBodyWhenPostOnEstadosThenReceive201StatusReponse() {
+		
+		jsonPostRequestBodyBahia = GetJsonOnFile.filePathAndName(
+				"/json/estado-controller-it/estado-bahia-request-body.json");
+		
+		given()
+			.body(jsonPostRequestBodyBahia)
+			.contentType(ContentType.JSON)
+			.accept(ContentType.JSON)
+		.when()
+			.post("/estados")
+		.then()
+			.statusCode(HttpStatus.CREATED.value());
+		
+	}
+	
+	
+	@Test
+	public void givenNoNomeEstadoPropertyWhenPostOnEstadosThenHandleBadRequest() {
+		
+		jsonNoNomeEstadoProperty = GetJsonOnFile.filePathAndName(
+				"/json/estado-controller-it/no-nome-estado-property-request-body.json");
+		
+		given()
+			.body(jsonNoNomeEstadoProperty)
+			.contentType(ContentType.JSON)
+			.accept(ContentType.JSON)
+		.when()
+			.post("/estados")
+		.then()
+			.statusCode(HttpStatus.BAD_REQUEST.value());
+		
+	}
+	
+	
+	
+	//TODO PUT estados/{estadoId}
+	
+	//TODO DELETE
+	
+	//TODO Handles: 404 Not found, 200 Ok, 400 Bad Request.
+	
+	
 	
 	
 	private void initializeData() {
@@ -77,6 +146,8 @@ public class EstadoControllerIT {
 		estado2.setUf("SP");
 		
 		estadoRepository.save(estado2);
+		
+		numberOfRecordsOnInitialization = (int) estadoRepository.count();
 				
 	}
 	
