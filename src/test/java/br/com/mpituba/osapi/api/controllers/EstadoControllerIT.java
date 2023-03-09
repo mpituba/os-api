@@ -123,7 +123,6 @@ public class EstadoControllerIT {
 	}
 	
 	
-	
 	@Test
 	public void givenAnEstadoDataToUpdateWhenPutOnEstadosEstadoIDThenCompareResponseBodyAndStatusResponse() {
 	
@@ -182,9 +181,28 @@ public class EstadoControllerIT {
 			.body("title", containsString("Resource not found"));
 	}
 	
-	//TODO DELETE 204 No Content || "title": 404 Resource not found
 	
-	//TODO Handles: 404 Not found, 200 Ok, 400 Bad Request.
+	@Test
+	public void givenTheInitialDatabaseStateWhenGetOnEstadosByIdThenVerify200Ok() {
+		
+		given()
+			.contentType(ContentType.JSON)
+			.accept(ContentType.JSON)
+		.when()
+			.get()
+		.then()
+			.statusCode(200);
+		
+		given()
+			.contentType(ContentType.JSON)
+			.accept(ContentType.JSON)
+		.when()
+			.get("/1")
+		.then()
+			.statusCode(200);
+		
+	}
+	
 	
 	
 	
