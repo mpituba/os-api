@@ -1,6 +1,7 @@
 package br.com.mpituba.osapi.api.controllers;
 
 import io.restassured.http.ContentType;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 
+
 import br.com.mpituba.osapi.domain.model.Estado;
 import br.com.mpituba.osapi.domain.repository.EstadoRepository;
 import br.com.mpituba.osapi.util.DatabaseCleaner;
@@ -16,6 +18,8 @@ import br.com.mpituba.osapi.util.GetJsonOnFile;
 import io.restassured.RestAssured;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.equalToObject;
 import static org.hamcrest.Matchers.hasSize;
 
 
@@ -31,6 +35,9 @@ public class EstadoControllerIT {
 	private String jsonPostRequestBodyBahia;
 	
 	private String jsonNoNomeEstadoProperty;
+	
+	private String jsonEstadoPutRequestBody;
+	
 	
 	@Autowired
 	private DatabaseCleaner databaseCleaner;
@@ -64,7 +71,6 @@ public class EstadoControllerIT {
 			.body("", hasSize(numberOfRecordsOnInitialization));
 			
 	}
-	
 	
 	
 	@Test
@@ -118,9 +124,65 @@ public class EstadoControllerIT {
 	
 	
 	
-	//TODO PUT estados/{estadoId}
+	@Test
+	public void givenAnEstadoDataToUpdateWhenPutOnEstadosEstadoIDThenCompareResponseBodyAndStatusResponse() {
 	
-	//TODO DELETE
+		jsonEstadoPutRequestBody = GetJsonOnFile.filePathAndName(
+				"/json/estado-controller-it/estado-put-request-body.json");
+				
+		given()
+			.body(jsonEstadoPutRequestBody)
+			.contentType(ContentType.JSON)
+			.accept(ContentType.JSON)
+		.when()
+			.put("/1")
+		.then()
+			.body("nome", containsString("Amazonas"))
+				.and()
+			.body("uf", containsString("AM"))
+				.and()
+			.body("id", equalToObject((Number) 1))
+				.and()
+			.statusCode(HttpStatus.OK.value());
+		
+	}
+	
+	@Test
+	public void givenAnEstadoToDeleteWithIdOneWhenDeleteThenTryToRemoveSameRecordThreeTimesWithTwoMessages() {
+		
+		//First Time
+		given()
+			.contentType(ContentType.JSON)
+			.accept(ContentType.JSON)
+		.when()
+			.delete("/1")
+		.then()
+			.statusCode(204);
+
+		//Second Time
+		given()
+			.contentType(ContentType.JSON)
+			.accept(ContentType.JSON)
+		.when()
+			.delete("/1")
+		.then()
+			.statusCode(404)
+		.and()
+			.body("title", containsString("Resource not found"));
+		
+		//Third time
+		given()
+			.contentType(ContentType.JSON)
+			.accept(ContentType.JSON)
+		.when()
+			.delete("/1")
+		.then()
+			.statusCode(404)
+		.and()
+			.body("title", containsString("Resource not found"));
+	}
+	
+	//TODO DELETE 204 No Content || "title": 404 Resource not found
 	
 	//TODO Handles: 404 Not found, 200 Ok, 400 Bad Request.
 	
